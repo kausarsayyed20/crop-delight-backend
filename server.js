@@ -114,6 +114,33 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Products endpoint
+app.post('/products', async (req, res) => {
+  const { productName, price, category } = req.body;
+
+  if (!productName || !price || !category) {
+    return res.status(400).json({ message: 'Product name, price, and category are required' });
+  }
+
+  try {
+    // Log received data
+    console.log('Received product data:', req.body);
+
+    // Write to database
+    const database = client.db('crop_delight_db');
+    const collection = database.collection('products');
+    const result = await collection.insertOne({ productName, price, category });
+    console.log(`New product inserted with the following id: ${result.insertedId}`);
+
+    // Send a success response
+    res.status(200).json({ message: 'Product added successfully' });
+  } catch (error) {
+    console.error("Error during product addition process", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 // Start the server
 app.listen(PORT, (error) => {
   if (!error) {
