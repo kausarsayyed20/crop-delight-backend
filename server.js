@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = 3000;
@@ -125,11 +126,13 @@ app.post('/product', async (req, res) => {
   try {
     // Log received data
     console.log('Received product data:', req.body);
+    // Generate a unique product ID
+    const productId = uuidv4();
 
     // Write to database
     const database = client.db('crop_delight_db');
     const collection = database.collection('products');
-    const result = await collection.insertOne({ productName, price, category, username });
+    const result = await collection.insertOne({ productId, productName, price, category, username });
     console.log(`New product inserted with the following id: ${result.insertedId}`);
 
     // Send a success response
