@@ -114,12 +114,12 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Products endpoint
-app.post('/products', async (req, res) => {
-  const { productName, price, category } = req.body;
+// Products endpoint to add a product
+app.post('/product', async (req, res) => {
+  const { productName, price, category, username } = req.body;
 
-  if (!productName || !price || !category) {
-    return res.status(400).json({ message: 'Product name, price, and category are required' });
+  if (!productName || !price || !category || !username) {
+    return res.status(400).json({ message: 'Product name, price, category and username are required' });
   }
 
   try {
@@ -129,7 +129,7 @@ app.post('/products', async (req, res) => {
     // Write to database
     const database = client.db('crop_delight_db');
     const collection = database.collection('products');
-    const result = await collection.insertOne({ productName, price, category });
+    const result = await collection.insertOne({ productName, price, category, username });
     console.log(`New product inserted with the following id: ${result.insertedId}`);
 
     // Send a success response
