@@ -91,7 +91,7 @@ app.post('/register', async (req, res) => {
 
 // Login endpoint
 app.post('/login', async (req, res) => {
-  console.log("attemp to log in ");
+  console.log("attempt to log in ");
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -139,6 +139,19 @@ app.post('/product', async (req, res) => {
     res.status(200).json({ message: 'Product added successfully' });
   } catch (error) {
     console.error("Error during product addition process", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Endpoint to fetch products
+app.get('/products', async (req, res) => {
+  try {
+    const database = client.db('crop_delight_db');
+    const collection = database.collection('products');
+    const products = await collection.find({}).toArray();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products", error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
